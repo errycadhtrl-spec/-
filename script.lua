@@ -1,0 +1,25 @@
+local P=game.Players.LocalPlayer;local C=P.Character or P.CharacterAdded:Wait();local H=C:WaitForChild("Humanoid")
+P.CharacterAdded:Connect(function(nc)C=nc;H=nc:WaitForChild("Humanoid")end)
+local G=Instance.new("ScreenGui",P:WaitForChild("PlayerGui"))G.ResetOnSpawn=false
+local F=Instance.new("Frame",G)F.Size=UDim2.new(0,450,0,300)F.Position=UDim2.new(0.5,-225,0.5,-150)F.BackgroundColor3=Color3.fromRGB(30,30,30)F.Active=true F.Draggable=true
+local T=Instance.new("TextLabel",F)T.Size=UDim2.new(1,0,0,30)T.BackgroundColor3=Color3.fromRGB(20,20,20)T.Text=" Delta Client Menu "
+T.TextColor3=Color3.fromRGB(255,255,255)T.TextSize=16;T.Font=Enum.Font.SourceSansBold
+local S=Instance.new("Frame",F)S.Size=UDim2.new(0,120,1,-30)S.Position=UDim2.new(0,0,0,30)S.BackgroundColor3=Color3.fromRGB(25,25,25)
+local M=Instance.new("ScrollingFrame",F)M.Size=UDim2.new(1,-120,1,-30)M.Position=UDim2.new(0,120,0,30)M.BackgroundTransparency=1;M.CanvasSize=UDim2.new(0,0,1.5,0)
+local E=M:Clone()E.Parent=F;E.Visible=false
+local L1,L2=Instance.new("UIListLayout",M),Instance.new("UIListLayout",E)L1.Padding,L2.Padding=UDim.new(0,8),UDim.new(0,8)
+local function cB(t,p)local b=Instance.new("TextButton",p)b.Size=UDim2.new(1,-10,0,35)b.BackgroundColor3=Color3.fromRGB(50,50,50)b.TextColor3=Color3.fromRGB(255,255,255)b.Text=t;b.Font=Enum.Font.SourceSans;b.TextSize=14;return b end
+local tM=cB("Основная",S)tM.Position=UDim2.new(0,5,0,10)tM.Size=UDim2.new(1,-10,0,40)tM.MouseButton1Click:Connect(function()M.Visible=true;E.Visible=false end)
+local tE=cB("Эффекты",S)tE.Position=UDim2.new(0,5,0,60)tE.Size=UDim2.new(1,-10,0,40)tE.MouseButton1Click:Connect(function()M.Visible=false;E.Visible=true end)
+local fly,nc,spd,jmp,imgS,chS=false,false,false,false,false,false
+local bV,bG;local b1=cB("Полет: ВЫКЛ",M)b1.MouseButton1Click:Connect(function()fly=not fly;if fly then b1.Text="Полет: ВКЛ"b1.BackgroundColor3=Color3.fromRGB(0,120,0)bG=Instance.new("BodyGyro",C.HumanoidRootPart)bG.P=9e4;bG.maxTorque=Vector3.new(9e5,9e5,9e5)bG.cframe=C.HumanoidRootPart.CFrame;bV=Instance.new("BodyVelocity",C.HumanoidRootPart)bV.velocity=Vector3.new(0,0.1,0)bV.maxForce=Vector3.new(9e5,9e5,9e5)task.spawn(function()while fly and C and C:FindFirstChild("HumanoidRootPart")do bV.velocity=H.MoveDirection*50;bG.cframe=workspace.CurrentCamera.CFrame;task.wait()end end)else b1.Text="Полет: ВЫКЛ"b1.BackgroundColor3=Color3.fromRGB(50,50,50)if bV then bV:Destroy()end;if bG then bG:Destroy()end;nc=false end end)
+local b2=cB("Ноуклип: ОТКЛЮЧЕНО",M)task.spawn(function()while task.wait()do if fly then b2.Text=nc and"Ноуклип: ВКЛ"or"Ноуклип: ВЫКЛ"b2.BackgroundColor3=nc and Color3.fromRGB(0,120,0)or Color3.fromRGB(100,100,0)else b2.Text="Ноуклип: Только при полете"b2.BackgroundColor3=Color3.fromRGB(50,50,50)nc=false end;if nc and C then for _,p in pairs(C:GetDescendants())do if p:IsA("BasePart")then p.CanCollide=false end end end end end)
+b2.MouseButton1Click:Connect(function()if fly then nc=not nc end end)
+local b3=cB("Скорость на Макс: ВЫКЛ",M)b3.MouseButton1Click:Connect(function()spd=not spd;H.WalkSpeed=spd and 250 or 16;b3.Text=spd and"Скорость на Макс: ВКЛ"or"Скорость на Макс: ВЫКЛ"b3.BackgroundColor3=spd and Color3.fromRGB(0,120,0)or Color3.fromRGB(50,50,50)end)
+local b4=cB("Прыжок на Макс: ВЫКЛ",M)b4.MouseButton1Click:Connect(function()jmp=not jmp;H.JumpPower=jmp and 350 or 50;b4.Text=jmp and"Прыжок на Макс: ВКЛ"or"Прыжок на Макс: ВЫКЛ"b4.BackgroundColor3=jmp and Color3.fromRGB(0,120,0)or Color3.fromRGB(50,50,50)end)
+local sG;local b5=cB("Спам картинок: ВЫКЛ",M)b5.MouseButton1Click:Connect(function()imgS=not imgS;if imgS then b5.Text="Спам картинок: ВКЛ"b5.BackgroundColor3=Color3.fromRGB(0,120,0)sG=Instance.new("ScreenGui",P.PlayerGui)task.spawn(function()while imgS do local im=Instance.new("ImageLabel",sG)im.Size=UDim2.new(0,math.random(100,300),0,math.random(100,300))im.Position=UDim2.new(math.random(0,90)/100,0,math.random(0,90)/100,0)im.Image="rbxassetid://6073173046"im.BackgroundTransparency=1;task.wait(0.2)end end)else b5.Text="Спам картинок: ВЫКЛ"b5.BackgroundColor3=Color3.fromRGB(50,50,50)if sG then sG:Destroy()end end end)
+local b6=cB("Локальный спам чата: ВЫКЛ",M)b6.MouseButton1Click:Connect(function()chS=not chS;b6.Text=chS and"Локальный спам чата: ВКЛ"or"Локальный спам чата: ВЫКЛ"b6.BackgroundColor3=chS and Color3.fromRGB(0,120,0)or Color3.fromRGB(50,50,50)if chS then task.spawn(function()while chS do game:GetService("StarterGui"):SetCore("ChatMakeSystemMessage",{Text="[Delta System]: Тест спама!",Color=Color3.fromRGB(255,0,0),Font=Enum.Font.SourceSansBold,TextSize=18})task.wait(0.4)end end)end end)
+local function fEff(cl,btn,name)if C and C:FindFirstChild("HumanoidRootPart")then local ef=C.HumanoidRootPart:FindFirstChildOfClass(cl)if ef then ef:Destroy()btn.BackgroundColor3=Color3.fromRGB(50,50,50)else Instance.new(cl,C.HumanoidRootPart)btn.BackgroundColor3=Color3.fromRGB(0,120,0)end end end
+local b7=cB("Эффект: Огонь",E)b7.MouseButton1Click:Connect(function()fEff("Fire",b7)end)
+local b8=cB("Эффект: Искры",E)b8.MouseButton1Click:Connect(function()fEff("Sparkles",b8)end)
+
